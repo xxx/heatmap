@@ -22,31 +22,37 @@ $(function () {
     height: $('#result').height()
   });
   
-  $('#trackme').mousemove(function (event) {
-    var key, eventX, eventY, i, j, initialI, initialJ;
-    
-    eventX = event.pageX - this.offsetLeft;
-    eventY = event.pageY - this.offsetTop;
-    
-    initialI = eventX - 1;
-    initialJ = eventY - 1;
-    
-    for (i = initialI; i <= eventX + 1; i += 1) {
-      if (i < 0) {
-        continue;
-      }
-      
-      for (j = initialJ; j <= eventY + 1; j += 1) {
-        if (j < 0) {
+  (function () {
+    var key, eventX, eventY, i, j, initialI, initialJ,
+        canvasWidth = canvas.attr('width'),
+        canvasHeight = canvas.attr('height');
+
+    $('#trackme').mousemove(function (event) {
+      eventX = event.pageX - this.offsetLeft;
+      eventY = event.pageY - this.offsetTop;
+
+      initialI = eventX - 1;
+      initialJ = eventY - 1;
+
+      for (i = initialI; i <= eventX + 1; i += 1) {
+        if (i < 0 || i >= canvasWidth) {
           continue;
         }
-        
-        key = i + "," + j;
-        heat[key] = heat[key] || 0;
-        heat[key] += heatMask[i - initialI][j - initialJ];
+
+        for (j = initialJ; j <= eventY + 1; j += 1) {
+          if (j < 0 || j >= canvasHeight) {
+            continue;
+          }
+
+          if (heatMask[i - initialI][j - initialJ] > 0) {
+            key = i + "," + j;
+            heat[key] = heat[key] || 0;
+            heat[key] += heatMask[i - initialI][j - initialJ];
+          }
+        }
       }
-    }
-  });
+    });
+  }());
   
   setInterval(function () {
 //    renderHeat(normalizeHeat(smoothHeat(heat)));
@@ -208,6 +214,4 @@ $(function () {
     cache.hueToRGB[cachekey] = [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     return cache.hueToRGB[cachekey];
   };
-  
-  
 });
