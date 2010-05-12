@@ -7,7 +7,15 @@ $(function () {
       smoothHeat,
       renderHeat,
       toHue,
-      hueToRGB;
+      hueToRGB,
+      heatMask;
+  
+  // mask we apply to a point that is moused over.
+  heatMask = [
+    [0, 1, 0],
+    [1, 3, 1],
+    [0, 1, 0]
+  ];
   
   canvas.attr({
     width: $('#result').width(),
@@ -15,28 +23,29 @@ $(function () {
   });
   
   $('#trackme').mousemove(function (event) {
-    var key, eventX, eventY, i, j;
+    var key, eventX, eventY, i, j, initialI, initialJ;
     
     eventX = event.pageX - this.offsetLeft;
     eventY = event.pageY - this.offsetTop;
     
-    for (i = eventX - 1; i <= eventX + 1; i += 1) {
+    initialI = eventX - 1;
+    initialJ = eventY - 1;
+    
+    for (i = initialI; i <= eventX + 1; i += 1) {
       if (i < 0) {
         continue;
       }
       
-      for (j = eventY - 1; j <= eventY + 1; j += 1) {
+      for (j = initialJ; j <= eventY + 1; j += 1) {
         if (j < 0) {
           continue;
         }
         
         key = i + "," + j;
         heat[key] = heat[key] || 0;
-        heat[key] += 1;
+        heat[key] += heatMask[i - initialI][j - initialJ];
       }
     }
-    
-    heat[eventX + "," + eventY] += 2;
   });
   
   setInterval(function () {
