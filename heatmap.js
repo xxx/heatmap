@@ -4,7 +4,7 @@ $(function () {
       context,
       cache = { toHue: {}, hueToRGB: {}},
       normalizeHeat,
-      drawHeat,
+      renderHeat,
       toHue,
       hueToRGB;
   
@@ -46,7 +46,7 @@ $(function () {
   });
   
   setInterval(function () {
-    drawHeat(normalizeHeat(heat));
+    renderHeat(normalizeHeat(heat));
   }, 500);
   
   // normalize to a 0-255 range
@@ -74,7 +74,7 @@ $(function () {
     return normalizedHeat;
   };
   
-  drawHeat = function (heat) {
+  renderHeat = function (heat) {
     var x, y, splitArray, rgb;
     context = canvas.get(0).getContext('2d');
     
