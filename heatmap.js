@@ -96,7 +96,7 @@ $(function () {
       return cache.toHue[value];
     }
     
-    hue = 240 - parseInt((value * 240) / 255, 10);
+    hue = 240 - Math.floor((value * 240) / 255, 10);
     
     cache.toHue[value] = hue;
     
