@@ -132,14 +132,14 @@ $(function () {
    * v: 0-1, decimals ok
    */
   hueToRGB = function(h, s, v) {
-    var cachekey = h + "/" + s + "/" + v;
+    var r, g, b,
+        i,
+        f, p, q, t,
+        cachekey = h + "/" + s + "/" + v;
+    
     if (cache.hueToRGB[cachekey]) {
       return cache.hueToRGB[cachekey];
     }
-    
-    var r, g, b;
-    var i;
-    var f, p, q, t;
     
     // Make sure our arguments stay in-range
     h = Math.max(0, Math.min(360, h));
