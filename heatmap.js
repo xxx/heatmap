@@ -131,7 +131,7 @@ $(function () {
    * s: 0-1, decimals ok
    * v: 0-1, decimals ok
    */
-  hueToRGB = function(h, s, v) {
+  hueToRGB = function (h, s, v) {
     var r, g, b,
         i,
         f, p, q, t,
@@ -159,7 +159,7 @@ $(function () {
     q = v * (1 - s * f);
     t = v * (1 - s * (1 - f));
   
-    switch(i) {
+    switch (i) {
       case 0:
         r = v;
         g = t;
