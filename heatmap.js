@@ -1,23 +1,17 @@
 $(function () {
   var heat = {},
-      canvas,
-      context,
+      canvas = $('#overlay'),
+      context = canvas.get(0).getContext('2d'),
       cache = { toHue: {}, hueToRGB: {}},
       normalizeHeat,
       renderHeat,
       toHue,
       hueToRGB;
   
-  canvas = $('<canvas id="overlay"></canvas>');
-  
-  canvas.css({
-    position: 'absolute',
-    top: 0,
-    left: 0
-  }).attr({
+  canvas.attr({
     width: $('#result').width(),
     height: $('#result').height()
-  }).appendTo($('#result_container'));
+  });
   
   $('#trackme').mousemove(function (event) {
     var key, eventX, eventY, i, j;
@@ -76,7 +70,6 @@ $(function () {
   
   renderHeat = function (heat) {
     var x, y, splitArray, rgb;
-    context = canvas.get(0).getContext('2d');
     
     $.each(heat, function(key, value) {
       splitArray = key.split(',');
