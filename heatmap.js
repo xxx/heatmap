@@ -2,8 +2,9 @@ $(function () {
   var heat = {},
       canvas = $('#overlay'),
       context = canvas.get(0).getContext('2d'),
-      cache = { toHue: {}, hueToRGB: {}},
+      cache = { toHue: {}, hueToRGB: {} },
       normalizeHeat,
+      smoothHeat,
       renderHeat,
       toHue,
       hueToRGB;
@@ -39,6 +40,7 @@ $(function () {
   });
   
   setInterval(function () {
+//    renderHeat(normalizeHeat(smoothHeat(heat)));
     renderHeat(normalizeHeat(heat));
   }, 500);
   
@@ -67,13 +69,37 @@ $(function () {
     return normalizedHeat;
   };
   
+  /*
+   * smooth out the edges with a gaussian blur
+   * kernel taken from http://www.bv2.co.uk/?p=511
+   * so I don't have to tool around with that right now.
+    
+    2    4    5    4    2
+    4    9   12    9    4
+    5   12   15   12    5
+    4    9   12    9    4
+    2    4    5    4    2
+   */
+  smoothHeat = function (heat) {
+    var smoothedHeat = {}, x, y, splitKey;
+    
+    $.each(heat, function (key, value) {
+      splitKey = key.split(',');
+      x = splitKey[0];
+      y = splitKey[1];
+    });
+    
+    return smoothedHeat;
+    
+  };
+  
   renderHeat = function (heat) {
-    var x, y, splitArray, rgb;
+    var x, y, splitKey, rgb;
     
     $.each(heat, function(key, value) {
-      splitArray = key.split(',');
-      x = splitArray[0];
-      y = splitArray[1];
+      splitKey = key.split(',');
+      x = splitKey[0];
+      y = splitKey[1];
       
       rgb = hueToRGB(toHue(value), 1, 1);
       
@@ -82,6 +108,7 @@ $(function () {
     });
   };
   
+  // take normalized heat value from above and 
   toHue = function (value) {
     var hue;
     if (cache.toHue[value]) {
@@ -119,7 +146,7 @@ $(function () {
     s = Math.max(0, Math.min(1, s));
     v = Math.max(0, Math.min(1, v));
     
-    if(s == 0) {
+    if(s === 0) {
       // Achromatic (grey)
       r = g = b = v;
       return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
