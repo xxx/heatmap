@@ -55,8 +55,10 @@ $(function () {
   }());
   
   setInterval(function () {
-//    renderHeat(normalizeHeat(smoothHeat(heat)));
-    renderHeat(normalizeHeat(heat));
+    renderHeat(normalizeHeat(smoothHeat(heat)));
+    
+    // run with no smoothing. faster, but ugly as hell.
+//    renderHeat(normalizeHeat(heat));
   }, 500);
   
   // normalize to a 0-255 range
@@ -84,29 +86,47 @@ $(function () {
     return normalizedHeat;
   };
   
-  /*
-   * smooth out the edges with a gaussian blur
-   * kernel taken from http://www.bv2.co.uk/?p=511
-   * so I don't have to tool around with that right now.
+  
+  (function () {
+    var gaussian = [
+      [2,  4,  5,  4, 2],
+      [4,  9, 12,  9, 4],
+      [5, 12, 15, 12, 5],
+      [4,  9, 12,  9, 4],
+      [2,  4,  5,  4, 2]
+    ];
     
-    2    4    5    4    2
-    4    9   12    9    4
-    5   12   15   12    5
-    4    9   12    9    4
-    2    4    5    4    2
-   */
-  smoothHeat = function (heat) {
-    var smoothedHeat = {}, x, y, splitKey;
-    
-    $.each(heat, function (key, value) {
-      splitKey = key.split(',');
-      x = splitKey[0];
-      y = splitKey[1];
-    });
-    
-    return smoothedHeat;
-    
-  };
+    /*
+     * smooth out the edges with a gaussian blur
+     * kernel taken from http://www.bv2.co.uk/?p=511
+     * so I don't have to tool around with that right now.
+     * replace with your own at your leisure.
+     */
+    smoothHeat = function (heat) {
+      var smoothedHeat = {}, x, y, splitKey;
+
+      $.each(heat, function (key, value) {
+        var i, j, result = 0, heatVal;
+        splitKey = key.split(',');
+        x = parseInt(splitKey[0], 10);
+        y = parseInt(splitKey[1], 10);
+
+        // assume a 5x5 gaussian kernel here
+        for (i = x - 2; i <= x + 2; i += 1) {
+          for (j = y - 2; j <= y + 2; j += 1) {
+            heatVal = heat[i + "," + j] || 0;
+            result += heatVal * gaussian[i - (x - 2)][j - (y - 2)];
+          }
+        }
+
+        // multiply by reciprocal of sum of the gaussian kernel
+        // or divide by sum, as we do here.
+        smoothedHeat[key] = value + ((value * result) / 159);
+      });
+
+      return smoothedHeat;
+    };
+  }());
   
   renderHeat = function (heat) {
     var x, y, splitKey, rgb;
@@ -123,7 +143,18 @@ $(function () {
     });
   };
   
+  window.renderHeat = function () {
+    renderHeat(normalizeHeat(smoothHeat(heat)));
+  };
+  
+  window.renderHeat2 = function () {
+    renderHeat(normalizeHeat(heat));
+  };
+  
   // take normalized heat value from above and 
+  // convert it to a 0 (red, hot) - 240 (blue, cold) range.
+  // we assume the passed normalized values are
+  //   0 (cold) - 255 (hot)
   toHue = function (value) {
     var hue;
     if (cache.toHue[value]) {
