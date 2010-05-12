@@ -68,7 +68,7 @@ $(function () {
     }
     
     $.each(heat, function (key, value) {
-      normalizedHeat[key] = parseInt(255 * ((value - minHeat) / denominator), 10);
+      normalizedHeat[key] = Math.floor(255 * ((value - minHeat) / denominator));
     });
     
     return normalizedHeat;
@@ -104,7 +104,11 @@ $(function () {
   };
   
   /*
-   * h: 0-360, whole numbers
+   * HSV to RGB color conversion
+   *
+   * pulled from http://snipplr.com/view.php?codeview&id=14590
+   * 
+   * h: 0-360 , whole numbers
    * s: 0-1, decimals ok
    * v: 0-1, decimals ok
    */
@@ -114,23 +118,14 @@ $(function () {
       return cache.hueToRGB[cachekey];
     }
     
-    /**
-     * HSV to RGB color conversion
-     *
-     * H runs from 0 to 360 degrees
-     * S and V run from 0 to 100
-     * 
-     * Ported from the excellent java algorithm by Eugene Vishnevsky at:
-     * http://www.cs.rit.edu/~ncs/color/t_convert.html
-     */
     var r, g, b;
     var i;
     var f, p, q, t;
     
     // Make sure our arguments stay in-range
     h = Math.max(0, Math.min(360, h));
-    s = Math.max(0, Math.min(100, s));
-    v = Math.max(0, Math.min(100, v));
+    s = Math.max(0, Math.min(1, s));
+    v = Math.max(0, Math.min(1, v));
     
     if(s == 0) {
       // Achromatic (grey)
