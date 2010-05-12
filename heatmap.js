@@ -35,8 +35,7 @@ $(function () {
       }
     }
     
-    key = eventX + "," + eventY;
-    heat[key] += 2;
+    heat[eventX + "," + eventY] += 2;
   });
   
   setInterval(function () {
