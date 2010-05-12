@@ -143,14 +143,6 @@ $(function () {
     });
   };
   
-  window.renderHeat = function () {
-    renderHeat(normalizeHeat(smoothHeat(heat)));
-  };
-  
-  window.renderHeat2 = function () {
-    renderHeat(normalizeHeat(heat));
-  };
-  
   // take normalized heat value from above and 
   // convert it to a 0 (red, hot) - 240 (blue, cold) range.
   // we assume the passed normalized values are
