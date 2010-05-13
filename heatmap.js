@@ -54,13 +54,6 @@ $(function () {
     });
   }());
   
-  setInterval(function () {
-    renderHeat(normalizeHeat(smoothHeat(heat)));
-    
-    // run with no smoothing. faster, but ugly as hell.
-//    renderHeat(normalizeHeat(heat));
-  }, 500);
-  
   // normalize to a 0-255 range
   normalizeHeat = function (heat) {
     var minHeat, maxHeat, heatValues = [], normalizedHeat = {},
@@ -88,7 +81,9 @@ $(function () {
   
   
   (function () {
-    var gaussian = [
+    var gaussian, smoothedHeat, x, y, splitKey;
+    
+    gaussian = [
       [2,  4,  5,  4, 2],
       [4,  9, 12,  9, 4],
       [5, 12, 15, 12, 5],
@@ -103,8 +98,7 @@ $(function () {
      * replace with your own at your leisure.
      */
     smoothHeat = function (heat) {
-      var smoothedHeat = {}, x, y, splitKey;
-
+      smoothedHeat = {};
       $.each(heat, function (key, value) {
         var i, j, result = 0, heatVal;
         splitKey = key.split(',');
@@ -237,4 +231,11 @@ $(function () {
     cache.hueToRGB[cachekey] = [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     return cache.hueToRGB[cachekey];
   };
+  
+  setInterval(function () {
+    renderHeat(normalizeHeat(smoothHeat(heat)));
+    
+    // run with no smoothing. faster, but ugly as hell.
+//    renderHeat(normalizeHeat(heat));
+  }, 500);
 });
