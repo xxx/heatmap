@@ -81,7 +81,8 @@ $(function () {
   
   
   (function () {
-    var gaussian, smoothedHeat, x, y, splitKey;
+    var gaussian, smoothedHeat, x, y, splitKey,
+        i, j, result, heatVal;
     
     gaussian = [
       [2,  4,  5,  4, 2],
@@ -98,9 +99,11 @@ $(function () {
      * replace with your own at your leisure.
      */
     smoothHeat = function (heat) {
+      
       smoothedHeat = {};
+      
       $.each(heat, function (key, value) {
-        var i, j, result = 0, heatVal;
+        result = 0;
         splitKey = key.split(',');
         x = parseInt(splitKey[0], 10);
         y = parseInt(splitKey[1], 10);
