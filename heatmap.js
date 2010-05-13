@@ -54,7 +54,9 @@ $(function () {
     });
   }());
   
-  // normalize to a 0-255 range
+  /*
+   * normalize to a 0-255 range
+   */
   normalizeHeat = function (heat) {
     var minHeat, maxHeat, heatValues = [], normalizedHeat = {},
         denominator;
@@ -140,19 +142,18 @@ $(function () {
     });
   };
   
-  // take normalized heat value from above and 
-  // convert it to a 0 (red, hot) - 240 (blue, cold) range.
-  // we assume the passed normalized values are
-  //   0 (cold) - 255 (hot)
+  /*
+   * take normalized heat value from above and 
+   * convert it to a 0 (red, hot) - 240 (blue, cold) range.
+   * we assume the passed normalized values are
+   *  0 (cold) - 255 (hot)
+   */
   toHue = function (value) {
-    var hue;
     if (cache.toHue[value]) {
       return cache.toHue[value];
     }
     
-    hue = 240 - Math.floor((value * 240) / 255);
-    
-    cache.toHue[value] = hue;
+    cache.toHue[value] = 240 - Math.floor((value * 240) / 255);
     
     return cache.toHue[value];
   };
