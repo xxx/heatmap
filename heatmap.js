@@ -71,7 +71,7 @@ $(function () {
     denominator = maxHeat - minHeat;
     
     if (denominator === 0 || denominator === Number.NEGATIVE_INFINITY) {
-      denominator = 1
+      denominator = 1;
     }
     
     $.each(heat, function (key, value) {
@@ -130,7 +130,7 @@ $(function () {
   renderHeat = function (heat) {
     var x, y, splitKey, rgb;
     
-    $.each(heat, function(key, value) {
+    $.each(heat, function (key, value) {
       splitKey = key.split(',');
       x = splitKey[0];
       y = splitKey[1];
@@ -182,7 +182,7 @@ $(function () {
     s = Math.max(0, Math.min(1, s));
     v = Math.max(0, Math.min(1, v));
     
-    if(s === 0) {
+    if (s === 0) {
       // Achromatic (grey)
       r = g = b = v;
       return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
@@ -196,40 +196,40 @@ $(function () {
     t = v * (1 - s * (1 - f));
   
     switch (i) {
-      case 0:
-        r = v;
-        g = t;
-        b = p;
-        break;
-        
-      case 1:
-        r = q;
-        g = v;
-        b = p;
-        break;
-        
-      case 2:
-        r = p;
-        g = v;
-        b = t;
-        break;
-        
-      case 3:
-        r = p;
-        g = q;
-        b = v;
-        break;
-        
-      case 4:
-        r = t;
-        g = p;
-        b = v;
-        break;
-        
-      default: // case 5:
-        r = v;
-        g = p;
-        b = q;
+    case 0:
+      r = v;
+      g = t;
+      b = p;
+      break;
+      
+    case 1:
+      r = q;
+      g = v;
+      b = p;
+      break;
+      
+    case 2:
+      r = p;
+      g = v;
+      b = t;
+      break;
+      
+    case 3:
+      r = p;
+      g = q;
+      b = v;
+      break;
+      
+    case 4:
+      r = t;
+      g = p;
+      b = v;
+      break;
+      
+    default: // case 5:
+      r = v;
+      g = p;
+      b = q;
     }
     
     cache.hueToRGB[cachekey] = [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
