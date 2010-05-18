@@ -8,7 +8,9 @@ $(function () {
       renderHeat,
       toHue,
       hueToRGB,
-      heatMask;
+      heatMask,
+      clickMask,
+      applyMask;
   
   // mask we apply to a point that is moused over.
   heatMask = [
@@ -17,40 +19,60 @@ $(function () {
     [0, 1, 0]
   ];
   
+  // mask we apply to a point that is clicked.
+  clickMask = [
+    [0, 1, 1, 1, 0],
+    [1, 3, 3, 3, 1],
+    [1, 3, 5, 3, 1],
+    [1, 3, 3, 3, 1],
+    [0, 1, 1, 1, 0]
+  ];
+
   canvas.attr({
     width: $('#result').width(),
     height: $('#result').height()
   });
-  
-  (function () {
-    var key, eventX, eventY, i, j, initialI, initialJ,
-        canvasWidth = canvas.attr('width'),
-        canvasHeight = canvas.attr('height');
 
-    $('#trackme').mousemove(function (event) {
-      eventX = event.pageX - this.offsetLeft;
-      eventY = event.pageY - this.offsetTop;
+  applyMask = function (mask, eventX, eventY) {
+    var key, i, j, initialI, initialJ,
+      canvasWidth = canvas.attr('width'),
+      canvasHeight = canvas.attr('height'),
+      maskSeg;
 
-      initialI = eventX - 1;
-      initialJ = eventY - 1;
+    // mask segment size: (length - 1) / 2, length should be odd
+    maskSeg = Math.floor(mask.length / 2);
 
-      for (i = initialI; i <= eventX + 1; i += 1) {
-        if (i < 0 || i >= canvasWidth) {
+    initialI = eventX - maskSeg;
+    initialJ = eventY - maskSeg;
+
+    for (i = initialI; i <= eventX + maskSeg; i += 1) {
+      if (i < 0 || i >= canvasWidth) {
+        continue;
+      }
+
+      for (j = initialJ; j <= eventY + maskSeg; j += 1) {
+        if (j < 0 || j >= canvasHeight) {
           continue;
         }
 
-        for (j = initialJ; j <= eventY + 1; j += 1) {
-          if (j < 0 || j >= canvasHeight) {
-            continue;
-          }
-
-          key = i + "," + j;
-          heat[key] = heat[key] || 0;
-          heat[key] += heatMask[i - initialI][j - initialJ];
-        }
+        key = i + "," + j;
+        heat[key] = heat[key] || 0;
+        heat[key] += mask[i - initialI][j - initialJ];
       }
-    });
-  }());
+    }
+  };
+  
+  $('#trackme').click(function (event) {
+    var eventX, eventY;
+    eventX = event.pageX - this.offsetLeft;
+    eventY = event.pageY - this.offsetTop;
+    applyMask(clickMask, eventX, eventY);
+  }).mousemove(function (event) {
+    var eventX, eventY;
+    eventX = event.pageX - this.offsetLeft;
+    eventY = event.pageY - this.offsetTop;
+    applyMask(heatMask, eventX, eventY);
+  });
   
   /*
    * normalize to a 0-255 range
