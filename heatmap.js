@@ -44,11 +44,9 @@ $(function () {
             continue;
           }
 
-          if (heatMask[i - initialI][j - initialJ] > 0) {
-            key = i + "," + j;
-            heat[key] = heat[key] || 0;
-            heat[key] += heatMask[i - initialI][j - initialJ];
-          }
+          key = i + "," + j;
+          heat[key] = heat[key] || 0;
+          heat[key] += heatMask[i - initialI][j - initialJ];
         }
       }
     });
@@ -120,7 +118,7 @@ $(function () {
 
         // multiply by reciprocal of sum of the gaussian kernel
         // or divide by sum, as we do here.
-        smoothedHeat[key] = value + ((value * result) / 159);
+        smoothedHeat[key] = value + ((value * (result / 25)) / 159);
       });
 
       return smoothedHeat;
