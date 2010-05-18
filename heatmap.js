@@ -1,6 +1,8 @@
 $(function () {
   var heat = {},
       canvas = $('#overlay'),
+      canvasWidth,
+      canvasHeight,
       context = canvas.get(0).getContext('2d'),
       cache = { toHue: {}, hueToRGB: {} },
       normalizeHeat,
@@ -32,11 +34,12 @@ $(function () {
     width: $('#result').width(),
     height: $('#result').height()
   });
+  
+  canvasWidth = canvas.attr('width');
+  canvasHeight = canvas.attr('height');
 
   applyMask = function (mask, eventX, eventY) {
     var key, i, j, initialI, initialJ,
-      canvasWidth = canvas.attr('width'),
-      canvasHeight = canvas.attr('height'),
       maskSeg;
 
     // mask segment size: (length - 1) / 2, length should be odd
