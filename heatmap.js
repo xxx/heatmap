@@ -291,6 +291,11 @@ $(function () {
     renderHeat(normalizeHeat(smoothHeat(heat)));
   };
   
+  $('#doRender').click(function (e) {
+    window.doRender();
+    e.preventDefault();
+  });
+  
 //  setInterval(function () {
 //    renderHeat(normalizeHeat(smoothHeat(heat)));
     
