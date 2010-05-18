@@ -2,10 +2,11 @@
   var smoothHeat, normalizeHeat, canvasWidth, canvasHeight;
   
   onmessage = function (event) {
-    var data = JSON.parse(event.data);
+    var data = JSON.parse(event.data), result;
     canvasWidth = data.width;
     canvasHeight = data.height;
-    postMessage(JSON.stringify({heat: normalizeHeat(smoothHeat(data.heat))}));
+    result = data.smoothing ? normalizeHeat(smoothHeat(data.heat)) : normalizeHeat(data.heat);
+    postMessage(JSON.stringify({heat: result}));
   };
 
   

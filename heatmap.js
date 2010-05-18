@@ -21,7 +21,7 @@ $(function () {
     renderHeat(JSON.parse(event.data).heat);
     $('#render-time .time').text((new Date().getTime() - renderStartTime) / 1000);
     renderStartTime = 0;
-    $('#doRender').removeAttr('disabled');
+    $('#doRender, #doRenderWithoutSmoothing').removeAttr('disabled');
   };
   
   // mask we apply to a point that is moused over.
@@ -196,10 +196,10 @@ $(function () {
     return cache.hueToRGB[cachekey];
   };
   
-  $('#doRender').click(function (e) {
-    $(this).attr('disabled', 'disabled');
+  $('#doRender, #doRenderWithoutSmoothing').click(function (e) {
+    $('#doRender, #doRenderWithoutSmoothing').attr('disabled', 'disabled');
     renderStartTime = new Date().getTime();
-    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight}));
+    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight, smoothing: $(this).is('#doRender')}));
     e.preventDefault();
   });
   
