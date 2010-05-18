@@ -124,28 +124,55 @@ $(function () {
      * replace with your own at your leisure.
      */
     smoothHeat = function (heat) {
-      
       smoothedHeat = {};
       
-      $.each(heat, function (key, value) {
-        result = 0;
-        splitKey = key.split(',');
-        x = parseInt(splitKey[0], 10);
-        y = parseInt(splitKey[1], 10);
+      for (x = 0; x < canvasWidth; x += 1) {
+        for (y = 0; y < canvasHeight; y += 1) {
+          result = 0;
+          // assume a 5x5 gaussian kernel here
+          for (i = x - 2; i <= x + 2; i += 1) {
+            if (i < 0 || i >= canvasWidth) {
+              continue;
+            }
+            
+            for (j = y - 2; j <= y + 2; j += 1) {
+              if (j < 0 || j >= canvasHeight) {
+                continue;
+              }
+              
+              heatVal = heat[i + "," + j] || 0;
+              result += heatVal * gaussian[i - (x - 2)][j - (y - 2)];
+            }
+          }
 
-        // assume a 5x5 gaussian kernel here
-        for (i = x - 2; i <= x + 2; i += 1) {
-          for (j = y - 2; j <= y + 2; j += 1) {
-            heatVal = heat[i + "," + j] || 0;
-            result += heatVal * gaussian[i - (x - 2)][j - (y - 2)];
+          // multiply by reciprocal of sum of the gaussian kernel
+          // or divide by sum, as we do here.
+          if (result > 0) {
+            result /= 159;
+            smoothedHeat[x + "," + y] = result;
           }
         }
-
-        // multiply by reciprocal of sum of the gaussian kernel
-        // or divide by sum, as we do here.
-        result /= 159;
-        smoothedHeat[key] = result;
-      });
+      }
+      
+//      $.each(heat, function (key, value) {
+//        result = 0;
+//        splitKey = key.split(',');
+//        x = parseInt(splitKey[0], 10);
+//        y = parseInt(splitKey[1], 10);
+//
+//        // assume a 5x5 gaussian kernel here
+//        for (i = x - 2; i <= x + 2; i += 1) {
+//          for (j = y - 2; j <= y + 2; j += 1) {
+//            heatVal = heat[i + "," + j] || 0;
+//            result += heatVal * gaussian[i - (x - 2)][j - (y - 2)];
+//          }
+//        }
+//
+//        // multiply by reciprocal of sum of the gaussian kernel
+//        // or divide by sum, as we do here.
+//        result /= 159;
+//        smoothedHeat[key] = result;
+//      });
 
       return smoothedHeat;
     };
