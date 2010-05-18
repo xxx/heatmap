@@ -5,12 +5,10 @@ $(function () {
       canvasHeight,
       context = canvas.get(0).getContext('2d'),
       cache = { toHue: {}, hueToRGB: {} },
-      normalizeHeat,
-      smoothHeat,
       renderHeat,
       toHue,
       hueToRGB,
-      heatMask,
+      mousemoveMask,
       clickMask,
       applyMask,
       worker,
@@ -25,7 +23,7 @@ $(function () {
   };
   
   // mask we apply to a point that is moused over.
-  heatMask = [
+  mousemoveMask = [
     [0, 1, 0],
     [1, 3, 1],
     [0, 1, 0]
@@ -49,10 +47,9 @@ $(function () {
   canvasHeight = canvas.attr('height');
 
   applyMask = function (mask, eventX, eventY) {
-    var key, i, j, initialI, initialJ,
-      maskSeg;
+    var key, i, j, initialI, initialJ, maskSeg;
 
-    // mask segment size: (length - 1) / 2, length should be odd
+    // mask segment size: truncation of length / 2; length should be odd
     maskSeg = Math.floor(mask.length / 2);
 
     initialI = eventX - maskSeg;
@@ -76,15 +73,9 @@ $(function () {
   };
   
   $('#trackme').click(function (event) {
-    var eventX, eventY;
-    eventX = event.pageX - this.offsetLeft;
-    eventY = event.pageY - this.offsetTop;
-    applyMask(clickMask, eventX, eventY);
+    applyMask(clickMask, event.pageX - this.offsetLeft, event.pageY - this.offsetTop);
   }).mousemove(function (event) {
-    var eventX, eventY;
-    eventX = event.pageX - this.offsetLeft;
-    eventY = event.pageY - this.offsetTop;
-    applyMask(heatMask, eventX, eventY);
+    applyMask(mousemoveMask, event.pageX - this.offsetLeft, event.pageY - this.offsetTop);
   });
   
   renderHeat = function (heat) {

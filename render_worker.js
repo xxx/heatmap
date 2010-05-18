@@ -23,7 +23,7 @@
     ];
     
     /*
-     * smooth out the edges with a gaussian blur
+     * smooth out the edges with a (pseudo) gaussian blur
      * kernel taken from http://www.bv2.co.uk/?p=511
      * so I don't have to tool around with that right now.
      * replace with your own at your leisure.
@@ -106,7 +106,6 @@
     
     for (key in heat) {
       normalizedHeat[key] = Math.floor(255 * ((heat[key] - minHeat) / denominator));
-      
     }
     
     return normalizedHeat;
