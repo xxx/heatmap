@@ -257,10 +257,14 @@ $(function () {
     return cache.hueToRGB[cachekey];
   };
   
-  setInterval(function () {
+  window.doRender = function () {
     renderHeat(normalizeHeat(smoothHeat(heat)));
+  };
+  
+//  setInterval(function () {
+//    renderHeat(normalizeHeat(smoothHeat(heat)));
     
     // run with no smoothing. faster, but ugly as hell.
 //    renderHeat(normalizeHeat(heat));
-  }, 500);
+//  }, 500);
 });
