@@ -140,7 +140,8 @@ $(function () {
 
         // multiply by reciprocal of sum of the gaussian kernel
         // or divide by sum, as we do here.
-        smoothedHeat[key] = value + ((value * (result / 25)) / 159);
+        result /= 159;
+        smoothedHeat[key] = result;
       });
 
       return smoothedHeat;
