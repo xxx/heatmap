@@ -6,6 +6,7 @@ $(function () {
       context = canvas.get(0).getContext('2d'),
       cache = { toHue: {}, hueToRGB: {} },
       renderHeat,
+      dumpHeat,
       toHue,
       hueToRGB,
       mousemoveMask,
@@ -19,7 +20,7 @@ $(function () {
     renderHeat(JSON.parse(event.data).heat);
     $('#render-time .time').text((new Date().getTime() - renderStartTime) / 1000);
     renderStartTime = 0;
-    $('#doRender, #doRenderWithoutSmoothing').removeAttr('disabled');
+    $('button').removeAttr('disabled');
   };
   
   // mask we apply to a point that is moused over.
@@ -39,8 +40,8 @@ $(function () {
   ];
 
   canvas.attr({
-    width: $('#result').width(),
-    height: $('#result').height()
+    width: $('#trackme').width(),
+    height: $('#trackme').height()
   });
   
   canvasWidth = canvas.attr('width');
@@ -72,15 +73,19 @@ $(function () {
     }
   };
   
-  $('#trackme').click(function (event) {
-    applyMask(clickMask, event.pageX - this.offsetLeft, event.pageY - this.offsetTop);
+  $('#trackme:not(.disabled)').click(function (event) {
+    var offset = $(this).offsetParent().offset();
+    applyMask(clickMask, event.pageX - offset.left, event.pageY - offset.top);
   }).mousemove(function (event) {
-    applyMask(mousemoveMask, event.pageX - this.offsetLeft, event.pageY - this.offsetTop);
+    var offset = $(this).offsetParent().offset();
+    applyMask(mousemoveMask, event.pageX - offset.left, event.pageY - offset.top);
   });
   
   renderHeat = function (heat) {
     var x, y, splitKey, rgb;
     
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
+
     $.each(heat, function (key, value) {
       splitKey = key.split(',');
       x = splitKey[0];
@@ -91,6 +96,26 @@ $(function () {
       context.fillStyle = "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
       context.fillRect(x, y, 1, 1);
     });
+
+    $('#overlay').fadeIn('fast');
+  };
+
+  dumpHeat = function (heat) {
+    var val = '{\n';
+
+    $.each(heat, function (k, v) {
+      if (v !== 0) {
+        val += '  "' + k + '": ' + v + ",\n";
+      }
+    });
+
+    // strip off last comma so we are json-compliant
+    if (!$.isEmptyObject(heat)) {
+      val = val.substring(0, val.length - 2);
+    }
+
+    val += "\n}\n"
+    $('#data-output').text(val);
   };
   
   /*
@@ -187,11 +212,32 @@ $(function () {
     return cache.hueToRGB[cachekey];
   };
   
-  $('#doRender, #doRenderWithoutSmoothing').click(function (e) {
-    $('#doRender, #doRenderWithoutSmoothing').attr('disabled', 'disabled');
+  $('.render-button').click(function (e) {
+    $('button').attr('disabled', true);
+    $('#trackme').addClass('disabled');
     renderStartTime = new Date().getTime();
-    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight, smoothing: $(this).is('#doRender')}));
-    e.preventDefault();
+    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight, smoothing: this.id === 'do-render'}));
   });
-  
+
+  $('#clear-data').click(function (e) {
+    heat = {};
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
+  });
+
+  $('#collect-data').click(function (e) {
+    $(this).attr('disabled', true);
+    $('#trackme').removeClass('disabled');
+    $('#overlay').fadeOut('fast');
+  });
+
+  $('#dump-data').click(function (e) {
+    dumpHeat(heat);
+  });
+
+  $('#import-data').click(function (e) {
+    try {
+      heat = JSON.parse($('#data-output').val());
+    }
+    catch (err) {}
+  });
 });
