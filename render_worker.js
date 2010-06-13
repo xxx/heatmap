@@ -59,30 +59,9 @@
         }
       }
       
-//      $.each(heat, function (key, value) {
-//        result = 0;
-//        splitKey = key.split(',');
-//        x = parseInt(splitKey[0], 10);
-//        y = parseInt(splitKey[1], 10);
-//
-//        // assume a 5x5 gaussian kernel here
-//        for (i = x - 2; i <= x + 2; i += 1) {
-//          for (j = y - 2; j <= y + 2; j += 1) {
-//            heatVal = heat[i + "," + j] || 0;
-//            result += heatVal * gaussian[i - (x - 2)][j - (y - 2)];
-//          }
-//        }
-//
-//        // multiply by reciprocal of sum of the gaussian kernel
-//        // or divide by sum, as we do here.
-//        result /= 159;
-//        smoothedHeat[key] = result;
-//      });
-
       return smoothedHeat;
     };
   }());
-  
   
   /*
    * normalize to a 0-255 range

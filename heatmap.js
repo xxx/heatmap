@@ -114,7 +114,7 @@ $(function () {
       val = val.substring(0, val.length - 2);
     }
 
-    val += "\n}\n"
+    val += "\n}\n";
     $('#data-output').text(val);
   };
   
