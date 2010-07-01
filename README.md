@@ -5,7 +5,7 @@ Some javascript/canvas/web worker heatmap experimentation.
 
 Play along online at [http://heatmapthing.heroku.com](http://heatmapthing.heroku.com).
 
-You'll need to use a browser that supports canvas and web workers. Right now that means Firefox, Safari, and Chrome. Opera does not yet have workers. 
+You'll need to use a browser that supports canvas and web workers. Right now that means Firefox, Safari, Chrome, or Opera.
 
 Installation
 ============
