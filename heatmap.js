@@ -216,7 +216,13 @@ $(function () {
     $('button').attr('disabled', true);
     $('#trackme').addClass('disabled');
     renderStartTime = new Date().getTime();
-    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight, smoothing: this.id === 'do-render'}));
+    if (this.id === 'do-render') {
+      $('#overlay').addClass('blurred');
+    } else {
+      $('#overlay').removeClass('blurred');
+    }
+
+    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight}));
   });
 
   $('#clear-data').click(function (e) {
