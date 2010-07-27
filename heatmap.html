@@ -1,15 +1,11 @@
 <!doctype html>
 <html>
-  <head>
-    <title>heatmap</title>
-    <style>
-      .blurred { filter: url("#fuzzy"); }
-    </style>
-  </head>
+  <head><title>heatmap</title></head>
+  
   <body>
     <div style="position: relative; display: inline-block;">
       <img id="trackme" src="img.jpg" />
-      <canvas class="blurred" id="overlay" style="position: absolute; top: 0; left: 0; display: none;">This requires canvas support, which your browser does not have.</canvas>
+      <canvas id="overlay" style="opacity: 0.5; position: absolute; top: 0; left: 0; display: none;">This requires canvas support, which your browser does not have.</canvas>
     </div>
     <div style="display: inline-block;">
       <textarea id="data-output" cols=40 rows=20>Data Dumps Here</textarea>
@@ -17,7 +13,7 @@
     
     <div>
     <button type="button" class="render-button" id="do-render">render with smoothing</button>
-    <button type="button" class="render-button" id="do-render-without-smoothing">render without smoothing</button>
+    <button type="button" class="render-button" id="do-render-without-smoothing">render without smoothing (faster)</button>
     <button type="button" id="collect-data" disabled="disabled">collect data</button>
     <button type="button" id="import-data">import data</button>
     <button type="button" id="dump-data">dump data</button>
@@ -31,11 +27,5 @@
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="heatmap.js"></script>
-    <svg>
-      <defs>
-        <filter id="fuzzy"><feGaussianBlur stdDeviation="1.0" ></feGaussianBlur></filter>
-      </defs>
-    </svg>
-
   </body>
 </html>
