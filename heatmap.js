@@ -213,10 +213,19 @@ $(function () {
   };
   
   $('.render-button').click(function (e) {
+    var smoothing = this.id === 'do-render' && !$.browser.mozilla;
     $('button').attr('disabled', true);
     $('#trackme').addClass('disabled');
     renderStartTime = new Date().getTime();
-    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight, smoothing: this.id === 'do-render'}));
+
+    // svg filters only seem to be working for FF at the moment.
+    if (this.id === 'do-render') {
+      $('#overlay').addClass('blurred');
+    } else {
+      $('#overlay').removeClass('blurred');
+    }
+    
+    worker.postMessage(JSON.stringify({heat: heat, width: canvasWidth, height: canvasHeight, smoothing: smoothing}));
   });
 
   $('#clear-data').click(function (e) {

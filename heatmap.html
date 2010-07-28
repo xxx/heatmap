@@ -1,11 +1,16 @@
 <!doctype html>
 <html>
-  <head><title>heatmap</title></head>
-  
+  <head>
+    <title>heatmap</title>
+    <style>
+      .blurred { filter: url("#fuzzy"); }
+    </style>
+  </head>
+
   <body>
     <div style="position: relative; display: inline-block;">
       <img id="trackme" src="img.jpg" />
-      <canvas id="overlay" style="opacity: 0.5; position: absolute; top: 0; left: 0; display: none;">This requires canvas support, which your browser does not have.</canvas>
+      <canvas id="overlay" style="position: absolute; top: 0; left: 0; display: none;">This requires canvas support, which your browser does not have.</canvas>
     </div>
     <div style="display: inline-block;">
       <textarea id="data-output" cols=40 rows=20>Data Dumps Here</textarea>
@@ -24,7 +29,13 @@
     </div>
     <a href="http://github.com/xxx/heatmap">README</a>
     </div>
-    
+
+    <svg>
+      <defs>
+        <filter id="fuzzy"><feGaussianBlur stdDeviation="1.0" ></feGaussianBlur></filter>
+      </defs>
+    </svg>
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="heatmap.js"></script>
   </body>
