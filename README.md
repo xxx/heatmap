@@ -24,6 +24,6 @@ Mouseover and click the image, then render to see the heat. Smoothing is very sl
 Copyright
 =========
 
-Copyright (c) 2010 Michael Dungan, mpd@jesters-court.net, released under the MIT license
+Copyright (c) 2010-2011 Michael Dungan, mpd@jesters-court.net, released under the MIT license
 
 The included image was found at http://imgur.com and NOT covered under the above license. The creator is unknown, as are the license terms.
