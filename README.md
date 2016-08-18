@@ -3,7 +3,7 @@ heatmap
 
 Some javascript/canvas/web worker heatmap experimentation.
 
-Play along online at [http://heatmapthing.herokupp.com](http://heatmapthing.herokuapp.com).
+Play along online at [http://heatmapthing.herokuapp.com](http://heatmapthing.herokuapp.com).
 
 You'll need to use a browser that supports canvas and web workers. Right now that means Firefox, Safari, Chrome, or Opera.
 
